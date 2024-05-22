@@ -11,7 +11,13 @@ namespace Ribbons.RoguelikeGame
         public SysRandRNGProvider(string seed) => SetSeed(seed);
 
         public string GetSeed() => _seedString;
-        public float GetValue() => (float)_rng.NextDouble();
         public void SetSeed(string seed) => _rng = new(IRNGProvider.SeedStr2Int(_seedString = seed));
+
+        public float GetValue()
+        {
+            float r = (float)_rng.NextDouble();
+            _seedString = r.GetHashCode().ToString();
+            return r;
+        }
     }
 }

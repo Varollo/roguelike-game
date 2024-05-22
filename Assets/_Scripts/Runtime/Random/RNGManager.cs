@@ -65,13 +65,13 @@ namespace Ribbons.RoguelikeGame
         /// Random floating point value from [<paramref name="minInclusive"/>] [UpTo] [<paramref name="maxInclusive"/>].
         /// </returns>
         public static float Range(float minInclusive, float maxInclusive) => 
-            minInclusive + Value * (maxInclusive - minInclusive);
+            minInclusive + (maxInclusive - minInclusive) * Value;
 
         /// <returns>
         /// Random floating point value from [<paramref name="minInclusive"/>] [UpTo] (but not equal) [<paramref name="maxExclusive"/>].
         /// </returns>
         public static int Range(int minInclusive, int maxExclusive) => 
-            Mathf.FloorToInt(Range( minInclusive, maxExclusive - 1f ));
+            Mathf.FloorToInt(Range( (float)minInclusive, maxExclusive ));
 
         /// <returns>
         /// Random element of a given [<paramref name="list"/>].
@@ -110,6 +110,18 @@ namespace Ribbons.RoguelikeGame
             var seed = Seed;
             callback?.Invoke();
             Seed = seed;
+        }
+
+        /// <returns>
+        /// A <see cref="Vector2"/> whose x and y componnents are both random numbers, either [-1], [0] or [1].
+        /// </returns>
+        public static Vector2 Direction()
+        {
+            return new()
+            {
+                x = Range(-1, 2),
+                y = Range(-1, 2),
+            };
         }
     }
 }

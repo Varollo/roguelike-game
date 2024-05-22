@@ -16,6 +16,8 @@ namespace Ribbons.RoguelikeGame
         private Dictionary<Type, InputController> Controllers => _controllers ??=
             MakeControllers().ToDictionary(ctrl => ctrl.GetType(), ctrl => ctrl);
 
+        protected override bool KeepOnLoadScene => false;
+
         public static TController GetController<TController>() where TController : InputController
         {
             return Instance.Controllers[typeof(TController)] as TController;

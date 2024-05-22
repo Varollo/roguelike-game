@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 996467839, guid: 152e8323719be1a4698ad00f94087831, type: 3}
+  m_Sprite: {fileID: -2056979611, guid: 152e8323719be1a4698ad00f94087831, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -130,10 +130,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeOnStart: 1
   sprites:
-  - Sprite: {fileID: 681060078, guid: 152e8323719be1a4698ad00f94087831, type: 3}
+  - Sprite: {fileID: -302932058, guid: 152e8323719be1a4698ad00f94087831, type: 3}
     Weight: 0.8
-  - Sprite: {fileID: 996467839, guid: 152e8323719be1a4698ad00f94087831, type: 3}
+  - Sprite: {fileID: -2056979611, guid: 152e8323719be1a4698ad00f94087831, type: 3}
     Weight: 0.3
-  - Sprite: {fileID: -1756145015, guid: 152e8323719be1a4698ad00f94087831, type: 3}
+  - Sprite: {fileID: -308361959, guid: 152e8323719be1a4698ad00f94087831, type: 3}
     Weight: 0.5
   usePositionAsSeed: 1

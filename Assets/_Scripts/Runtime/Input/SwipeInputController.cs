@@ -12,7 +12,6 @@ namespace Ribbons.RoguelikeGame
         public delegate void SwipeDelegate(Touch touch, Vector2 dir);
         public event SwipeDelegate OnSwipe;
 
-        private Vector2 _lastSwipe;
         private Vector2 _fingerUpPos;
         private Vector2 _fingerDownPos;
         
@@ -22,6 +21,7 @@ namespace Ribbons.RoguelikeGame
             SwipeOnlyOnRelease = swipeOnlyOnRelease;
         }
 
+        public Vector2 Direction { get; private set; }
         private bool SwipeOnlyOnRelease { get; set; }
         private float SwipeThreshold { get; set; }
 
@@ -38,7 +38,7 @@ namespace Ribbons.RoguelikeGame
             if (SwipeOnlyOnRelease)
                 DetectSwipe(touch);
 
-            _lastSwipe = Vector2.zero;
+            Direction = Vector2.zero;
         }
 
         public override void TouchMoved(Touch touch)
@@ -50,10 +50,11 @@ namespace Ribbons.RoguelikeGame
         }
 
         private void HandleSwipe(Touch touch, Vector2 dir)
-        {
-            OnSwipe?.Invoke(touch, dir);
+        {            
+            Direction = dir;
             _fingerUpPos = _fingerDownPos = touch.position;
-            _lastSwipe = dir;
+
+            OnSwipe?.Invoke(touch, dir);
         }
 
         private void DetectSwipe(Touch touch)
@@ -67,7 +68,7 @@ namespace Ribbons.RoguelikeGame
             else if (IsHorizontalSwipe(swipeDelta)) // to alow diagnoals, just take out the 'else'
                 newSwipe.x = Mathf.Sign(_fingerDownPos.x - _fingerUpPos.x);
 
-            if (newSwipe != Vector2.zero && _lastSwipe == Vector2.zero)
+            if (newSwipe != Vector2.zero && Direction == Vector2.zero)
                 HandleSwipe(touch, newSwipe);
         }
 
