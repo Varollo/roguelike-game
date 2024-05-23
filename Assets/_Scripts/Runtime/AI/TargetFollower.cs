@@ -88,12 +88,26 @@ namespace Ribbons.RoguelikeGame
         private void Awake() => _wo ??= new(new((int)transform.position.x, (int)transform.position.y));
         private void OnDestroy() => WorldManager.Kill(_wo);
 
-        private void OnEnable() => _wo.OnMove += OnMove;
-        private void OnDisable() => _wo.OnMove -= OnMove;
+        private void OnEnable()
+        {
+            InputManager.GetController<SwipeInputController>().OnSwipe += OnSwipe;
+            _wo.OnMove += OnMove;
+        }
+
+        private void OnDisable()
+        {
+            InputManager.GetController<SwipeInputController>().OnSwipe -= OnSwipe;
+            _wo.OnMove -= OnMove;
+        }
 
         private void OnMove(Vector2Int endPos, Vector2Int moveDelta)
         {
             transform.DOMove((Vector2)endPos, .25f);
+        }
+
+        private void OnSwipe(Touch touch, Vector2 dir)
+        {
+            WorldManager.SetObjectPosition(_wo, Mathf.FloorToInt(dir.x), Mathf.FloorToInt(dir.y));
         }
     }
 }

@@ -58,6 +58,7 @@ namespace Ribbons.RoguelikeGame
             Position = newPos;
 
             OnMove?.Invoke(newPos, newPos - oldPos);
+            Debug.Log(newPos);
         } 
         #endregion
 
