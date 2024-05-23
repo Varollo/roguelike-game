@@ -75,15 +75,19 @@ namespace Ribbons.RoguelikeGame
         /// </summary>
         public static void SetObjectPosition(IWorldObject obj, int x, int y)
         {
-            Vector2Int oldPos = _obj2posMap[obj];
             Vector2Int newPos = new(x, y);
 
-            if (oldPos != newPos)
+            // if position is the same, ignore call.
+            if (_obj2posMap.TryGetValue(obj, out var oldPos))
             {
+                if (oldPos == newPos)
+                    return;
+
                 RemoveObjectFromPosition(obj, oldPos);
-                AddObjectToPosition(obj, newPos);
-                RelayPositionChange(obj, newPos);
             }
+
+            AddObjectToPosition(obj, newPos);
+            RelayPositionChange(obj, newPos);
         }
 
         /// <summary>
@@ -186,7 +190,7 @@ namespace Ribbons.RoguelikeGame
             }
 
             return null;
-        } 
+        }
         #endregion
     }
 
