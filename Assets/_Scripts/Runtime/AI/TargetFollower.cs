@@ -83,31 +83,25 @@ namespace Ribbons.RoguelikeGame
         public void OnTurnStart(ulong turnCount) { }
         */
 
-        private WorldObject _wo;
+        private Tile _tile;
 
-        private void Awake() => _wo ??= new(new((int)transform.position.x, (int)transform.position.y));
-        private void OnDestroy() => WorldManager.Kill(_wo);
+        private void Awake() => _tile ??= new(new((int)transform.position.x, (int)transform.position.y));
+        private void OnDestroy() => TileGridManager.DestroyTile(_tile);
 
         private void OnEnable()
         {
             InputManager.GetController<SwipeInputController>().OnSwipe += OnSwipe;
-            _wo.OnMove += OnMove;
         }
 
         private void OnDisable()
         {
             InputManager.GetController<SwipeInputController>().OnSwipe -= OnSwipe;
-            _wo.OnMove -= OnMove;
-        }
-
-        private void OnMove(Vector2Int endPos, Vector2Int moveDelta)
-        {
-            transform.DOMove((Vector2)endPos, .25f);
         }
 
         private void OnSwipe(Touch touch, Vector2 dir)
         {
-            WorldManager.SetObjectPosition(_wo, Mathf.FloorToInt(dir.x), Mathf.FloorToInt(dir.y));
+            transform.position += (Vector3)dir;
+            TileGridManager.SetTile(_tile, (int)transform.position.x, (int)transform.position.y);
         }
     }
 }

@@ -4,7 +4,7 @@
     {
         public bool IsSolid { get; set; } = true;
         
-        public virtual bool Collides(IWorldObject other)
+        public virtual bool Collides(ITile other)
         {
             if (!IsSolid)
                 return false;

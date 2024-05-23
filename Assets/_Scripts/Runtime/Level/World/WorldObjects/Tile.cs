@@ -5,22 +5,19 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class WorldObject : IWorldObject, IDisposable
+    public class Tile : ITile, IDisposable
     {
-        private readonly Dictionary<Type, IObjectComponent> _components;
-        
-        public delegate void WOMoveDelegate(Vector2Int endPos, Vector2Int moveDelta);
-        public event WOMoveDelegate OnMove;
-        
+        private readonly Dictionary<Type, ITileComponent> _components;
+                
         private Vector2Int _position;
         private bool _disposedValue;
 
-        public WorldObject(Vector2Int worldPosition = default)
+        public Tile(Vector2Int tilePosition = default)
         {
             var comps = SetupComponents();
             _components = comps != null ? new(comps) : new();
 
-            SetPosition(worldPosition);
+            SetPosition(tilePosition);
         }
 
         public Vector2Int Position 
@@ -29,17 +26,17 @@ namespace Ribbons.RoguelikeGame
             protected set => SetPosition(value); 
         }
 
-        public virtual void OnKill() { }
+        public virtual void OnDestroy() { }
 
         #region Components
-        protected virtual IEnumerable<KeyValuePair<Type, IObjectComponent>> SetupComponents()
+        protected virtual IEnumerable<KeyValuePair<Type, ITileComponent>> SetupComponents()
         {
             return null;
         } 
 
-        public TComponent GetComponent<TComponent>() where TComponent : IObjectComponent
+        public TComponent GetComponent<TComponent>() where TComponent : ITileComponent
         {
-            if (_components.TryGetValue(typeof(TComponent), out IObjectComponent component))
+            if (_components.TryGetValue(typeof(TComponent), out ITileComponent component))
                 return (TComponent)component;
             throw new ArgumentException($"No component with type '{typeof(TComponent)}' found on object of type '{GetType().FullName}'", nameof(TComponent));
         }
@@ -48,23 +45,20 @@ namespace Ribbons.RoguelikeGame
         #region Position
         protected virtual void SetPosition(Vector2Int value)
         {
-            WorldManager.SetObjectPosition(this, value.x, value.y);
+            TileGridManager.SetTile(this, value.x, value.y);
             _position = value;
         }
 
-        public virtual void OnPositionChange(Vector2Int newPos)
+        public virtual void OnPositionMove(Vector2Int newPos)
         {
-            Vector2Int oldPos = Position;
             Position = newPos;
-
-            OnMove?.Invoke(newPos, newPos - oldPos);
             Debug.Log(newPos);
         } 
         #endregion
 
         #region IEnumerable Stuff
         IEnumerator IEnumerable.GetEnumerator() => _components.Values.GetEnumerator();
-        public IEnumerator<IObjectComponent> GetEnumerator() => _components.Values.GetEnumerator();
+        public IEnumerator<ITileComponent> GetEnumerator() => _components.Values.GetEnumerator();
         #endregion
 
         #region IDisposable Stuff
@@ -73,14 +67,14 @@ namespace Ribbons.RoguelikeGame
             if (!_disposedValue)
             {
                 if (disposing)
-                    WorldManager.Kill(this);
+                    TileGridManager.DestroyTile(this);
 
                 _components.Clear();
                 _disposedValue = true;
             }
         }
 
-        ~WorldObject()
+        ~Tile()
         {
             Dispose(disposing: false);
         }
