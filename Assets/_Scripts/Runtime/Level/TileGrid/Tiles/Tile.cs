@@ -13,11 +13,12 @@ namespace Ribbons.RoguelikeGame
         private Vector2Int _position;
         private bool _disposedValue;
 
+        #region Constructors
         public Tile(params ITileComponent[] components) : this(Vector2Int.zero, components)
         {
         }
 
-        public Tile(Vector2Int tilePosition) : this(tilePosition, null) 
+        public Tile(Vector2Int tilePosition) : this(tilePosition, null)
         {
         }
 
@@ -34,7 +35,8 @@ namespace Ribbons.RoguelikeGame
                     _components.TryAdd(component.GetType(), component);
 
             SetPosition(tilePosition);
-        }
+        } 
+        #endregion
 
         #region Position
         public Vector2Int Position
@@ -61,10 +63,26 @@ namespace Ribbons.RoguelikeGame
             return null;
         }
 
+        protected virtual IEnumerable<ITileComponent> CombineComponents(IEnumerable<ITileComponent> mainComponents, params ITileComponent[] extraComponents)
+        {
+            if (extraComponents == null || extraComponents.Length == 0)
+                return mainComponents;            
+
+            else if (mainComponents == null)
+                return extraComponents;
+
+            return mainComponents.Concat(extraComponents);
+        }
+
         public TComponent GetComponent<TComponent>() where TComponent : ITileComponent
         {
             if (_components.TryGetValue(typeof(TComponent), out ITileComponent component))
                 return (TComponent)component;
+
+            TComponent firstMatch = _components.Values.OfType<TComponent>().FirstOrDefault();
+            if (firstMatch != null)
+                return firstMatch;
+
             throw new ArgumentException($"No component with type '{typeof(TComponent)}' found on object of type '{GetType().FullName}'", nameof(TComponent));
         }
         #endregion

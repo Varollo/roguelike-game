@@ -6,21 +6,29 @@ namespace Ribbons.RoguelikeGame
 {
     public class MovingTransformTile : MovingTile
     {
-        private readonly Transform _tileTransform;
-
         public MovingTransformTile(Transform tileTransform, params ITileComponent[] components) : base(tileTransform.position.ToVec2Int(), components)
         {
-            var transCom = GetComponent<TileTransformComponent>();
+            SetTransform(tileTransform);
+        }
+
+        protected Transform TileTransform { get; private set; }
+
+        public void SetTransform(Transform tileTransform)
+        {
+            TileTransformComponent transCom = GetComponent<TileTransformComponent>();
+
             if (transCom != null)
             {
-                _tileTransform = tileTransform;
-                transCom.SetTransform(_tileTransform);
+                TileTransform = tileTransform;
+                transCom.SetTransform(TileTransform);
             }
         }
 
-        protected override IEnumerable<ITileComponent> SetupComponents() => base.SetupComponents().Concat(new List<ITileComponent>()
-        {
-            new TileTransformComponent(_tileTransform)
-        });
+        protected override IEnumerable<ITileComponent> SetupComponents() => CombineComponents(
+            base.SetupComponents(),
+            CreateTransformComponent()
+        );
+
+        protected virtual TileTransformComponent CreateTransformComponent() => new(TileTransform);
     }
 }

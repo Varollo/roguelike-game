@@ -11,23 +11,21 @@ namespace Ribbons.RoguelikeGame
 
         protected virtual Vector2Int GetMove(Vector2Int newPos)
         {
-            return Position + GetComponent<TileMotorComponent>().GetMove(newPos);
+            return GetComponent<TileMotorComponent>().GetMove(newPos);
         }
 
-        public override void OnPositionMove(Vector2Int newPos)
+        public override void SetPosition(Vector2Int value)
         {
-            Vector2Int move = GetMove(newPos);
+            Vector2Int bestPos = Position + GetMove(value);
+            base.SetPosition(bestPos);
 
-            if (move != newPos)
-                SetPosition(move);
-
-            else
-                base.OnPositionMove(move);
         }
 
-        protected override IEnumerable<ITileComponent> SetupComponents() => new ITileComponent[]
-        {
-            new TileMotorComponent(),
-        };
+        protected override IEnumerable<ITileComponent> SetupComponents() => CombineComponents(
+            base.SetupComponents(),
+            CreateMotorComponent()
+        );
+
+        protected virtual TileMotorComponent CreateMotorComponent() => new();
     }
 }
