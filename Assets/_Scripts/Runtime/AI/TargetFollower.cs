@@ -1,11 +1,12 @@
 using DG.Tweening;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class TargetFollower : MonoBehaviour//, ITurnListener
+    public class TargetFollower : MonoBehaviour, ITurnListener
     {
-        /*
         private readonly static List<Vector2> _pendingMoves = new();
 
         [SerializeField] private Transform target;
@@ -81,27 +82,6 @@ namespace Ribbons.RoguelikeGame
         }
 
         public void OnTurnStart(ulong turnCount) { }
-        */
 
-        private Tile _tile;
-
-        private void Awake() => _tile ??= new(new((int)transform.position.x, (int)transform.position.y));
-        private void OnDestroy() => TileGridManager.DestroyTile(_tile);
-
-        private void OnEnable()
-        {
-            InputManager.GetController<SwipeInputController>().OnSwipe += OnSwipe;
-        }
-
-        private void OnDisable()
-        {
-            InputManager.GetController<SwipeInputController>().OnSwipe -= OnSwipe;
-        }
-
-        private void OnSwipe(Touch touch, Vector2 dir)
-        {
-            transform.position += (Vector3)dir;
-            TileGridManager.SetTile(_tile, (int)transform.position.x, (int)transform.position.y);
-        }
     }
 }

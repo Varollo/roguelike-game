@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
@@ -8,31 +9,57 @@ namespace Ribbons.RoguelikeGame
     public class Tile : ITile, IDisposable
     {
         private readonly Dictionary<Type, ITileComponent> _components;
-                
+
         private Vector2Int _position;
         private bool _disposedValue;
 
-        public Tile(Vector2Int tilePosition = default)
+        public Tile(params ITileComponent[] components) : this(Vector2Int.zero, components)
         {
-            var comps = SetupComponents();
-            _components = comps != null ? new(comps) : new();
+        }
+
+        public Tile(Vector2Int tilePosition) : this(tilePosition, null) 
+        {
+        }
+
+        public Tile(Vector2Int tilePosition, params ITileComponent[] components)
+        {
+            var compsToAdd = components != null && components.Length != 0
+                ? components.Concat(SetupComponents())
+                : SetupComponents();
+
+            _components = new();
+
+            if (compsToAdd != null)
+                foreach (var component in compsToAdd)
+                    _components.TryAdd(component.GetType(), component);
 
             SetPosition(tilePosition);
         }
 
-        public Vector2Int Position 
-        { 
-            get => _position; 
-            protected set => SetPosition(value); 
+        #region Position
+        public Vector2Int Position
+        {
+            get => _position;
+            protected set => SetPosition(value);
         }
 
-        public virtual void OnDestroy() { }
+        public virtual void SetPosition(Vector2Int value)
+        {
+            TileGridManager.SetTile(this, value.x, value.y);
+            _position = value;
+        }
+
+        public virtual void OnPositionMove(Vector2Int newPos)
+        {
+            Position = newPos;
+        }
+        #endregion
 
         #region Components
-        protected virtual IEnumerable<KeyValuePair<Type, ITileComponent>> SetupComponents()
+        protected virtual IEnumerable<ITileComponent> SetupComponents()
         {
             return null;
-        } 
+        }
 
         public TComponent GetComponent<TComponent>() where TComponent : ITileComponent
         {
@@ -42,18 +69,8 @@ namespace Ribbons.RoguelikeGame
         }
         #endregion
 
-        #region Position
-        protected virtual void SetPosition(Vector2Int value)
-        {
-            TileGridManager.SetTile(this, value.x, value.y);
-            _position = value;
-        }
-
-        public virtual void OnPositionMove(Vector2Int newPos)
-        {
-            Position = newPos;
-            Debug.Log(newPos);
-        } 
+        #region Empty Virtual Methods
+        public virtual void OnDestroy() { }
         #endregion
 
         #region IEnumerable Stuff
@@ -83,7 +100,7 @@ namespace Ribbons.RoguelikeGame
         {
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
-        } 
+        }
         #endregion
     }
 }

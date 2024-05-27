@@ -7,8 +7,8 @@ namespace Ribbons.RoguelikeGame
     public static class TileGridManager
     {
         // take a look at bidirectional maps / dictionaries.
-        private static readonly Dictionary<Vector2Int, List<ITile>> _pos2objMap = new();
-        private static readonly Dictionary<ITile, Vector2Int> _obj2posMap = new();
+        private static readonly Dictionary<Vector2Int, List<ITile>> _pos2tileMap = new();
+        private static readonly Dictionary<ITile, Vector2Int> _tile2posMap = new();
 
         #region Get Tile / Position
         /// <summary>
@@ -49,7 +49,7 @@ namespace Ribbons.RoguelikeGame
         /// <returns>if position is free returns null, otherwise returns all tiles found.</returns>
         public static List<ITile> GetAllTiles(int x, int y)
         {
-            if (_pos2objMap.TryGetValue(new(x, y), out var tiles))
+            if (_pos2tileMap.TryGetValue(new(x, y), out var tiles))
                 return tiles;
             return null;
         }
@@ -61,7 +61,7 @@ namespace Ribbons.RoguelikeGame
         /// <exception cref="KeyNotFoundException"></exception>
         public static Vector2Int GetTilePosition(ITile tile)
         {
-            if (_obj2posMap.TryGetValue(tile, out var pos))
+            if (_tile2posMap.TryGetValue(tile, out var pos))
                 return pos;
             else throw new KeyNotFoundException(
                 $"Tile not managed by {nameof(TileGridManager)} instance. No position registered for provided tile type '{tile.GetType().FullName}'."
@@ -78,7 +78,7 @@ namespace Ribbons.RoguelikeGame
             Vector2Int newPos = new(x, y);
 
             // if position is the same, ignore call.
-            if (_obj2posMap.TryGetValue(tile, out var oldPos))
+            if (_tile2posMap.TryGetValue(tile, out var oldPos))
             {
                 if (oldPos == newPos)
                     return;
@@ -96,7 +96,7 @@ namespace Ribbons.RoguelikeGame
         /// <returns>true if object was removed, false if object wasn't being managed.</returns>
         public static bool DestroyTile(ITile tile)
         {
-            if (RemoveTileFromPosition(tile, _obj2posMap[tile]) && _obj2posMap.Remove(tile))
+            if (RemoveTileFromPosition(tile, _tile2posMap[tile]) && _tile2posMap.Remove(tile))
             {
                 RelayTileDestroy(tile);
 
@@ -134,12 +134,12 @@ namespace Ribbons.RoguelikeGame
         /// </summary>
         private static void AddTileToPosition(ITile tile, Vector2Int pos)
         {
-            _obj2posMap[tile] = pos;
+            _tile2posMap[tile] = pos;
 
-            if (_pos2objMap.TryGetValue(pos, out var newPosTiles))
+            if (_pos2tileMap.TryGetValue(pos, out var newPosTiles))
                 newPosTiles.Add(tile);
             else
-                _pos2objMap.Add(pos, new() { tile });
+                _pos2tileMap.Add(pos, new() { tile });
         }
 
         /// <summary> 
@@ -147,12 +147,12 @@ namespace Ribbons.RoguelikeGame
         /// </summary>
         private static bool RemoveTileFromPosition(ITile tile, Vector2Int pos)
         {
-            if (_pos2objMap.TryGetValue(pos, out var posTiles))
+            if (_pos2tileMap.TryGetValue(pos, out var posTiles))
             {
                 posTiles.Remove(tile);
 
                 if (posTiles.Count == 0)
-                    _pos2objMap.Remove(pos);
+                    _pos2tileMap.Remove(pos);
 
                 return true;
             }
@@ -168,7 +168,7 @@ namespace Ribbons.RoguelikeGame
         /// <returns>true if at least 1 tile at (<paramref name="x"/>, <paramref name="y"/>), false if none.</returns>
         public static bool HasTile(int x, int y)
         {
-            List<ITile> tileList = _pos2objMap[new(x, y)];
+            List<ITile> tileList = _pos2tileMap[new(x, y)];
             return tileList != null && tileList.Count > 0;
         }
 
@@ -178,7 +178,7 @@ namespace Ribbons.RoguelikeGame
         /// <returns>true if tile is managed, false if not.</returns>
         public static bool HasTile(ITile tile)
         {
-            return _obj2posMap.ContainsKey(tile);
+            return _tile2posMap.ContainsKey(tile);
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 
 namespace Ribbons.RoguelikeGame
 {
-    public class ObjectComponent : ITileComponent
+    public class TileComponent : ITileComponent
     {
         public Vector2Int Position { get; private set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace Ribbons.RoguelikeGame
 {
-    public class ObjColliderComponent : ObjectComponent
+    public class TileColliderComponent : TileComponent
     {
         public bool IsSolid { get; set; } = true;
         
@@ -9,12 +9,12 @@
             if (!IsSolid)
                 return false;
                         
-            ObjColliderComponent otherCol = other.GetComponent<ObjColliderComponent>();
+            TileColliderComponent otherCol = other.GetComponent<TileColliderComponent>();
             
             return otherCol != null && otherCol.CanCollide(this);
         }
 
-        protected virtual bool CanCollide(ObjColliderComponent sender)
+        protected virtual bool CanCollide(TileColliderComponent sender)
         {
             return IsSolid;
         }
