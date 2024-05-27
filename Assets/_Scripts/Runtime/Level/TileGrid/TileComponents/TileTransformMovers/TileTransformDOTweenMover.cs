@@ -19,7 +19,7 @@ namespace Ribbons.RoguelikeGame
         {
             transform.DOKill();
 
-            if (CurrentMoveTarget.HasValue)
+            if (CurrentMoveTarget.HasValue && transform != null)
                 transform.position = CurrentMoveTarget.Value;
 
             CurrentMoveTarget = newMoveTarget;
