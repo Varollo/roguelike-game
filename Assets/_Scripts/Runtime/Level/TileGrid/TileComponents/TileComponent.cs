@@ -4,11 +4,11 @@ namespace Ribbons.RoguelikeGame
 {
     public class TileComponent : ITileComponent
     {
-        public Vector2Int Position { get; private set; }
+        public Vector2Int TilePosition { get; private set; }
 
         public virtual void OnTilePositionMove(Vector2Int newPos)
         {
-            Position = newPos;
+            TilePosition = newPos;
         }
 
         public virtual void OnTileDestroy() { }

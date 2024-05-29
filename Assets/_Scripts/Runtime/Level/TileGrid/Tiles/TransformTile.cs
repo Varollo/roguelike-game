@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class MovingTransformTile : MovingTile
+    public class TransformTile : MovableTile
     {
-        public MovingTransformTile(Transform tileTransform, params ITileComponent[] components) : base(tileTransform.position.ToVec2Int(), components)
+        public TransformTile(Transform tileTransform, params ITileComponent[] components) : base(tileTransform.position.ToVec2Int(), components)
         {
             SetTransform(tileTransform);
         }
@@ -25,10 +24,18 @@ namespace Ribbons.RoguelikeGame
         }
 
         protected override IEnumerable<ITileComponent> SetupComponents() => CombineComponents(
-            base.SetupComponents(),
-            CreateTransformComponent()
+            base.SetupComponents(), 
+            CreateTransformComponent(CreateTransformMover())
         );
 
-        protected virtual TileTransformComponent CreateTransformComponent() => new(TileTransform);
+        protected virtual TileTransformComponent CreateTransformComponent(ITileTransformMover mover)
+        {
+            return new(TileTransform, mover);
+        }
+
+        protected virtual ITileTransformMover CreateTransformMover()
+        {
+            return new TileTransformInstantMover();
+        }
     }
 }

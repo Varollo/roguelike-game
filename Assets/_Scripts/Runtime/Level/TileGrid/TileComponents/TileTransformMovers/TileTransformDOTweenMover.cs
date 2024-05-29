@@ -5,11 +5,13 @@ namespace Ribbons.RoguelikeGame
 {
     public class TileTransformDOTweenMover : ITileTransformMover
     {
+        public const float DEFAULT_DURATION = 0.25f;
+
         public Vector3? CurrentMoveTarget { get; private set; }
         public float MoveDuration { get; set; }
         public Ease MoveEasing { get; set; }
 
-        public TileTransformDOTweenMover(float moveDuration, Ease moveEasing = Ease.InOutQuad)
+        public TileTransformDOTweenMover(float moveDuration = DEFAULT_DURATION, Ease moveEasing = Ease.InOutQuad)
         {
             MoveDuration = moveDuration;
             MoveEasing = moveEasing;

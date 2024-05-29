@@ -21,7 +21,7 @@ namespace Ribbons.RoguelikeGame
         public override void OnTilePositionMove(Vector2Int newPos)
         {
             base.OnTilePositionMove(newPos);
-            _mover.MoveTransform(_transform, (Vector2) Position);
+            _mover.MoveTransform(_transform, (Vector2) TilePosition);
         }
 
         public void SetTransform(Transform transform)

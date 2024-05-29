@@ -7,8 +7,6 @@ namespace Ribbons.RoguelikeGame
         private readonly ITileMoveRule _moveRule;
         private readonly ITileMoveProcessor _moveProcessor;
 
-        private bool _initialized = false;
-
         #region Constructors
         /// <summary>
         /// Creates a <see cref="TileMotorComponent"/> with a <see cref="TileFreeMoveRule"/> and a <see cref="TileMoveDeltaProcessor"/> as default.
@@ -41,30 +39,15 @@ namespace Ribbons.RoguelikeGame
         } 
         #endregion
 
-        public Vector2Int LatePosition { get; private set; }
+        public Vector2Int GetMove() => GetMove(TilePosition);
 
         /// <summary>
         /// Gets the best move possible towards <paramref name="targetPos"/>.
         /// </summary>
-        public virtual Vector2Int GetMove(Vector2Int targetPos)
+        public Vector2Int GetMove(Vector2Int targetPos)
         {
-            if (!_initialized)
-            {
-                _initialized = true;                
-                return LatePosition = targetPos;
-            }
-
-            if (_moveRule.CanMove(LatePosition, targetPos))
-                return _moveProcessor.ProcessMove(targetPos, LatePosition);
-
-            else
-                return Vector2Int.zero;
-        }
-
-        public override void OnTilePositionMove(Vector2Int newPos)
-        {
-            LatePosition = Position;
-            base.OnTilePositionMove(newPos);
+            Vector2Int move = _moveProcessor.ProcessMove(TilePosition, targetPos);
+            return _moveRule.CanMove(TilePosition, move) ? move : Vector2Int.zero;
         }
     }
 }

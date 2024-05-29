@@ -18,7 +18,6 @@ namespace Ribbons.RoguelikeGame
         {
             Vector2Int bestPos = Position + GetMove(value);
             base.SetPosition(bestPos);
-
         }
 
         protected override IEnumerable<ITileComponent> SetupComponents() => CombineComponents(

@@ -83,7 +83,8 @@ namespace Ribbons.RoguelikeGame
             if (firstMatch != null)
                 return firstMatch;
 
-            throw new ArgumentException($"No component with type '{typeof(TComponent)}' found on object of type '{GetType().FullName}'", nameof(TComponent));
+            return default;
+            //throw new ArgumentException($"No component with type '{typeof(TComponent)}' found on object of type '{GetType().FullName}'", nameof(TComponent));
         }
         #endregion
 

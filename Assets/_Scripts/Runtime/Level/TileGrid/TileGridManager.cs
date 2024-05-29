@@ -168,8 +168,7 @@ namespace Ribbons.RoguelikeGame
         /// <returns>true if at least 1 tile at (<paramref name="x"/>, <paramref name="y"/>), false if none.</returns>
         public static bool HasTile(int x, int y)
         {
-            List<ITile> tileList = _pos2tileMap[new(x, y)];
-            return tileList != null && tileList.Count > 0;
+            return _pos2tileMap.TryGetValue(new(x, y), out var tileList) && tileList.Count > 0;
         }
 
         /// <summary>

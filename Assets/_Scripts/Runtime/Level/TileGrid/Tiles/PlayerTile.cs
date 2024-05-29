@@ -3,23 +3,19 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class PlayerTile : MovingTransformTile
+    public class PlayerTile : TransformTile
     {
         public PlayerTile(Transform playerTransform, params ITileComponent[] components) : base(playerTransform, components)
         {
         }
 
-        private void OnTurnAction(ulong turnCount)
-        {
-            SetPosition(Position);
-        }
+        private void OnTurnAction(ulong turnCount) => MoveTile(Motor.GetMove());
+
+        protected override ITileTransformMover CreateTransformMover() => new TileTransformDOTweenMover();
+        protected override ITileMoveProcessor CreateMoveProcessor() => new TileMoveSwipeProcessor();
 
         protected override IEnumerable<ITileComponent> SetupComponents() => CombineComponents(
             base.SetupComponents(),
-            new TileTurnListenerComponent(OnTurnAction)
-        );
-
-        protected override TileMotorComponent CreateMotorComponent() => new(new TileMoveSwipeProcessor());
-        protected override TileTransformComponent CreateTransformComponent() => new(TileTransform, new TileTransformDOTweenMover(.25f));
+            new TileTurnListenerComponent(OnTurnAction));
     }
 }
