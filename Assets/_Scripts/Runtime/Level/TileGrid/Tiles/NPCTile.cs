@@ -3,34 +3,34 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class NPCTile : TransformTile
+    public class NPCTile : BaseTile
     {
-        private Tile _playerTile;
+        private BaseTile _playerTile;
 
-        public NPCTile(Transform tileTransform, params ITileComponent[] components) : base(tileTransform, components)
+        public NPCTile(Transform npcTransform, params ITileComponent[] components) : base(npcTransform.position.ToVec2Int(), components)
         {
+            TransformComponent.SetTransform(npcTransform);
+            TurnListenerComponent.SetAction(OnTurnAction);
         }
+
+        protected virtual TransformTileComponent TransformComponent { get; } = new TweenTransformTileComponent();
+        protected virtual TileTurnListenerComponent TurnListenerComponent { get; } = new TileTurnListenerComponent();
+        protected virtual FollowerMoveTileComponent MoveTileComponent { get; } = new FollowerMoveTileComponent();
 
         private void OnTurnAction(ulong turnCount)
         {
-            _playerTile ??= Object.FindObjectOfType<PlayerTileView>().Tile as Tile;
-            MoveTile(Motor.GetMove(_playerTile.Position));
+            if (_playerTile == null)
+                MoveTileComponent.SetTarget(_playerTile = Object.FindAnyObjectByType<PlayerTileView>().Tile as BaseTile);
 
-            //Vector2Int move = _playerTile.Position - Position;
-
-            //SetPosition(Position + new Vector2Int(
-            //    move.x == 0 ? 0 : (int)Mathf.Sign(move.x),
-            //    move.y == 0 ? 0 : (int)Mathf.Sign(move.y)
-            //));
+            if (_playerTile != null)
+                SetPosition(Position + MoveTileComponent.GetMove());
         }
 
-        protected override IEnumerable<ITileComponent> SetupComponents() => CombineComponents(
-            base.SetupComponents(),
-            new TileTurnListenerComponent(OnTurnAction)
-        );
-
-        protected override ITileMoveRule CreateMoveRule() => new TileCollisionMoveRule();
-        protected override ITileMoveProcessor CreateMoveProcessor() => new TileFollowerProcessor();
-        protected override ITileTransformMover CreateTransformMover() => new TileTransformDOTweenMover();
+        protected override List<ITileComponent> GetDefaultComponents() => new()
+        {
+            TransformComponent,
+            TurnListenerComponent,
+            MoveTileComponent
+        };        
     }
 }

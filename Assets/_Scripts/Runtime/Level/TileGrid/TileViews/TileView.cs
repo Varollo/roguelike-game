@@ -22,6 +22,6 @@ namespace Ribbons.RoguelikeGame
         /// <summary>
         /// Get a new Tile Instance.
         /// </summary>
-        protected virtual ITile CreateTile() => new Tile(transform.position.ToVec2Int());
+        protected virtual ITile CreateTile() => new BaseTile(transform.position.ToVec2Int());
     }
 }
