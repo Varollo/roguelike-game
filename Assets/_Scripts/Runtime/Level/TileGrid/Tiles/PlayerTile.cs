@@ -3,25 +3,27 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class PlayerTile : BaseTile
+    public class PlayerTile : MovableTile
     {
-        public PlayerTile(Transform playerTransform, params ITileComponent[] components) : base(playerTransform.position.ToVec2Int(), components)
+        public PlayerTile(Transform playerTransform, params ITileComponent[] components) : base(playerTransform, components)
         {
-            TransformComponent.SetTransform(playerTransform);
-            TurnListenerComponent.SetAction(OnTurnAction);
         }
 
-        protected virtual MoveTileComponent MoveTileComponent { get; } = new SwipeToMoveTileComponent();
-        protected virtual TransformTileComponent TransformComponent { get; } = new TweenTransformTileComponent();
-        protected virtual TileTurnListenerComponent TurnListenerComponent { get; } = new TileTurnListenerComponent();
+        protected virtual TileTurnListenerComponent TurnListenerComponent { get; set; }
 
-        private void OnTurnAction(ulong turnCount) => SetPosition(Position + MoveTileComponent.GetMove());
-
-        protected override List<ITileComponent> GetDefaultComponents() => new()
+        private void OnTurnAction(ulong turnCount)
         {
-            TransformComponent,
-            TurnListenerComponent,
-            MoveTileComponent,
+            SetPosition(Position + MoveTileComponent.GetMove());
+        }
+
+        protected virtual TileTurnListenerComponent CreateTurnListenerComponent() => new(this, OnTurnAction);
+
+        protected override MoveTileComponent CreateMoveTileComponent() => new SwipeToMoveTileComponent(this, new CollisionMoveValidator());
+        protected override TransformTileComponent CreateTransformComponent() => new TweenTransformTileComponent(this);
+
+        protected override List<ITileComponent> GetDefaultComponents() => new(base.GetDefaultComponents())
+        {
+            (TurnListenerComponent = CreateTurnListenerComponent()),
         };
     }
 }

@@ -6,11 +6,11 @@ namespace Ribbons.RoguelikeGame
     {
         private readonly IMoveValidator _validator;
 
-        public MoveTileComponent() : this(new FreeMoveValidator())
-        { 
+        protected MoveTileComponent(BaseTile parentTile) : this(parentTile, new FreeMoveValidator())
+        {
         }
 
-        public MoveTileComponent(IMoveValidator validator)
+        protected MoveTileComponent(BaseTile parentTile, IMoveValidator validator) : base(parentTile)
         {
             _validator = validator;
         }
@@ -21,13 +21,15 @@ namespace Ribbons.RoguelikeGame
         {
             Vector2Int move = ComputeMove();
 
-            if (Validator.Validate(TilePosition, TilePosition + move))
+            if (ValidateMove(move))
                 return move;
 
             return ComputeFallback(move);
         }
 
         protected virtual Vector2Int ComputeFallback(Vector2Int badMove) => Vector2Int.zero;
+        protected virtual bool ValidateMove(Vector2Int move) => Validator.Validate(ParentTile, TilePosition + move);
+
         protected abstract Vector2Int ComputeMove();
     }
 }

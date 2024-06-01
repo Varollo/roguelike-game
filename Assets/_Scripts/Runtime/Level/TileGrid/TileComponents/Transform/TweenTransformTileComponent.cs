@@ -11,11 +11,11 @@ namespace Ribbons.RoguelikeGame
         public float MoveDuration { get; set; }
         public Ease MoveEasing { get; set; }
 
-        public TweenTransformTileComponent() : this(null)
+        public TweenTransformTileComponent(BaseTile parentTile) : this(parentTile, null)
         {            
         }
 
-        public TweenTransformTileComponent(Transform transform, float moveDuration = DEFAULT_DURATION, Ease moveEasing = Ease.InOutQuad) : base(transform)
+        public TweenTransformTileComponent(BaseTile parentTile, Transform transform, float moveDuration = DEFAULT_DURATION, Ease moveEasing = Ease.InOutQuad) : base(parentTile, transform)
         {
             MoveDuration = moveDuration;
             MoveEasing = moveEasing;

@@ -6,7 +6,7 @@ namespace Ribbons.RoguelikeGame
     {
         private readonly SwipeInputController _swipeController;
 
-        public SwipeToMoveTileComponent()
+        public SwipeToMoveTileComponent(BaseTile parentTile, IMoveValidator validator) : base(parentTile, validator)
         {
             _swipeController = InputManager.GetController<SwipeInputController>();
         }

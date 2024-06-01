@@ -4,7 +4,7 @@ namespace Ribbons.RoguelikeGame
 {
     public class SetTransformTileComponent : TransformTileComponent
     {
-        public SetTransformTileComponent(Transform transform) : base(transform)
+        public SetTransformTileComponent(BaseTile parentTile, Transform transform) : base(parentTile, transform)
         {
         }
 

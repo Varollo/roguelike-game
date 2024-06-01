@@ -6,13 +6,13 @@ namespace Ribbons.RoguelikeGame
     {
         private Transform _transform;
 
-        public TransformTileComponent() : this(null)
-        {
+        public TransformTileComponent(BaseTile parentTile) : this(parentTile, null) 
+        { 
         }
 
-        public TransformTileComponent(Transform transform)
+        protected TransformTileComponent(BaseTile parentTile, Transform transform) : base(parentTile)
         {
-            _transform = transform;
+            SetTransform(transform);
         }
 
         public override void OnTilePositionMove(Vector2Int newPos)

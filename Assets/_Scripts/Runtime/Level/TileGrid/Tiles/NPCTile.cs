@@ -3,34 +3,33 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class NPCTile : BaseTile
+    public class NPCTile : MovableTile
     {
+        private readonly FollowerMoveTileComponent _followComponent;
         private BaseTile _playerTile;
 
-        public NPCTile(Transform npcTransform, params ITileComponent[] components) : base(npcTransform.position.ToVec2Int(), components)
+        public NPCTile(Transform npcTransform, params ITileComponent[] components) : base(npcTransform, components)
         {
-            TransformComponent.SetTransform(npcTransform);
-            TurnListenerComponent.SetAction(OnTurnAction);
+            _followComponent = MoveTileComponent as FollowerMoveTileComponent;
         }
 
-        protected virtual TransformTileComponent TransformComponent { get; } = new TweenTransformTileComponent();
-        protected virtual TileTurnListenerComponent TurnListenerComponent { get; } = new TileTurnListenerComponent();
-        protected virtual FollowerMoveTileComponent MoveTileComponent { get; } = new FollowerMoveTileComponent();
+        protected TileTurnListenerComponent TurnListenerComponent { get; set; }
 
         private void OnTurnAction(ulong turnCount)
         {
             if (_playerTile == null)
-                MoveTileComponent.SetTarget(_playerTile = Object.FindAnyObjectByType<PlayerTileView>().Tile as BaseTile);
+                _followComponent.SetTarget(_playerTile = Object.FindAnyObjectByType<PlayerTileView>().Tile as BaseTile);
 
             if (_playerTile != null)
                 SetPosition(Position + MoveTileComponent.GetMove());
         }
 
-        protected override List<ITileComponent> GetDefaultComponents() => new()
+        protected override MoveTileComponent CreateMoveTileComponent() => new FollowerMoveTileComponent(this, new CollisionMoveValidator());
+        protected override TransformTileComponent CreateTransformComponent() => new TweenTransformTileComponent(this);
+
+        protected override List<ITileComponent> GetDefaultComponents() => new(base.GetDefaultComponents())
         {
-            TransformComponent,
-            TurnListenerComponent,
-            MoveTileComponent
-        };        
+            (TurnListenerComponent = new TileTurnListenerComponent(this, OnTurnAction)),
+        };
     }
 }

@@ -8,7 +8,7 @@
         private TurnDelegate _startCallback;
         private TurnDelegate _endCallback;
 
-        public TileTurnListenerComponent(TurnDelegate actionCallback = null, TurnDelegate startCallback = null, TurnDelegate endCallback = null)
+        public TileTurnListenerComponent(BaseTile parentTile, TurnDelegate actionCallback = null, TurnDelegate startCallback = null, TurnDelegate endCallback = null) : base(parentTile)
         {
             _actionCallback = actionCallback;
             _startCallback = startCallback;

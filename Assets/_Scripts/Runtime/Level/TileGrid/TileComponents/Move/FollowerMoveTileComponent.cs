@@ -7,13 +7,11 @@ namespace Ribbons.RoguelikeGame
         private readonly bool _allowDiagonals;
         private BaseTile _target;
 
-        public FollowerMoveTileComponent(BaseTile target = null, bool allowDiagonals = false) : base() 
+        public FollowerMoveTileComponent(BaseTile parentTile, BaseTile target = null, bool allowDiagonals = false) : this(parentTile, new FreeMoveValidator(), target, allowDiagonals)
         {
-            _allowDiagonals = allowDiagonals;
-            SetTarget(target);
         }
 
-        public FollowerMoveTileComponent(BaseTile target, IMoveValidator validator, bool allowDiagonals = false) : base(validator)
+        public FollowerMoveTileComponent(BaseTile parentTile, IMoveValidator validator, BaseTile target = null, bool allowDiagonals = false) : base(parentTile, validator)
         {
             _allowDiagonals = allowDiagonals;
             SetTarget(target);
@@ -44,7 +42,7 @@ namespace Ribbons.RoguelikeGame
                     Vector2Int move = new Vector2Int(x, y);
                     Vector2Int movePos = TilePosition + move;
 
-                    if (!Validator.Validate(TilePosition, movePos))
+                    if (!Validator.Validate(ParentTile, movePos))
                         continue;
 
                     float moveWeight = GetMoveWeight(movePos);
@@ -58,6 +56,8 @@ namespace Ribbons.RoguelikeGame
 
             return bestMove;
         }
+
+        protected override bool ValidateMove(Vector2Int move) => true;
 
         private float GetMoveWeight(Vector2Int movePos)
         {

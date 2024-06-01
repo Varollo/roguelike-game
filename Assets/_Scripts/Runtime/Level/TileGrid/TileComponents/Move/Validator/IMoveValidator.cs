@@ -4,6 +4,6 @@ namespace Ribbons.RoguelikeGame
 {
     public interface IMoveValidator
     {
-        bool Validate(Vector2Int fromPos, Vector2Int toPos);
+        bool Validate(BaseTile tile, Vector2Int toPos);
     }
 }
