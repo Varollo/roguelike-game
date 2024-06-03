@@ -2,30 +2,26 @@
 
 namespace Ribbons.RoguelikeGame
 {
-    public class FollowerMoveTileComponent : MoveTileComponent
+    public class FollowerMoveTileComponent : TargetedMoveTileComponent
     {
         private readonly bool _allowDiagonals;
-        private BaseTile _target;
 
         public FollowerMoveTileComponent(BaseTile parentTile, BaseTile target = null, bool allowDiagonals = false) : this(parentTile, new FreeMoveValidator(), target, allowDiagonals)
         {
         }
 
-        public FollowerMoveTileComponent(BaseTile parentTile, IMoveValidator validator, BaseTile target = null, bool allowDiagonals = false) : base(parentTile, validator)
+        public FollowerMoveTileComponent(BaseTile parentTile, IMoveValidator validator, BaseTile target = null, bool allowDiagonals = false) : base(parentTile, validator, target)
         {
             _allowDiagonals = allowDiagonals;
-            SetTarget(target);
-        }
-
-        public void SetTarget(BaseTile target)
-        {
-            _target = target;
         }
 
         protected override Vector2Int ComputeMove()
         {
             const int CHECK_WIDTH = 3;
             const int CHECK_HEIGHT = 3;
+
+            if (Target == null)
+                return Vector2Int.zero;
 
             Vector2Int bestMove = TilePosition;
             float bestWeight = float.PositiveInfinity;
@@ -61,7 +57,7 @@ namespace Ribbons.RoguelikeGame
 
         private float GetMoveWeight(Vector2Int movePos)
         {
-            return (_target.Position - movePos).sqrMagnitude;            
+            return (Target.Position - movePos).sqrMagnitude;
         }
 
         private bool CanSkip(int x, int y, Vector2Int minBounds, Vector2Int maxBounds)

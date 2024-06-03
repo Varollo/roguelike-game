@@ -8,6 +8,9 @@ namespace Ribbons.RoguelikeGame
 {
     public class BaseTile : ITile, IDisposable
     {
+        public delegate void TilePositionDelegate(Vector2Int position);
+        public event TilePositionDelegate TilePositionChangeEvent;
+
         private readonly Dictionary<Type, ITileComponent> _componentDictionary;
 
         private Vector2Int _position;
@@ -36,28 +39,40 @@ namespace Ribbons.RoguelikeGame
                 foreach (var component in compsToAdd)
                     _componentDictionary.TryAdd(component.GetType(), component);
 
-            SetPosition(tilePosition);
-        } 
+            Position = tilePosition;
+        }
         #endregion
+
+        public bool Enabled { get; protected set; } = true;
 
         #region Position
         public Vector2Int Position
         {
             get => _position;
-            protected set => SetPosition(value);
+            protected set
+            {
+                TileGridManager.SetTile(this, value.x, value.y);
+                _position = value;
+
+                OnSetPosition(value);
+            }
         }
 
-        public virtual void SetPosition(Vector2Int value)
-        {
-            TileGridManager.SetTile(this, value.x, value.y);
-            _position = value;
-        }
 
-        public virtual void OnPositionMove(Vector2Int newPos)
+        public void OnPositionMove(Vector2Int newPos)
         {
             Position = newPos;
+
+            if (!Enabled) 
+                return;
+
+            foreach (ITileComponent component in this)
+                component.OnTilePositionMove(newPos);
+
+            TilePositionChangeEvent?.Invoke(newPos);
         }
 
+        protected virtual void OnSetPosition(Vector2Int position) { }
         #endregion
 
         #region Components

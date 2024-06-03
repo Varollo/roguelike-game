@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public abstract class MovableTile : TransformTile
+    public abstract class MovableTile : TurnBasedTile
     {
         public MovableTile(Transform tileTransform, params ITileComponent[] components) : base(tileTransform, components)
         {

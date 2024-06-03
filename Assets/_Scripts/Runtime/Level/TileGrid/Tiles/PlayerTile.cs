@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
@@ -9,21 +8,12 @@ namespace Ribbons.RoguelikeGame
         {
         }
 
-        protected virtual TileTurnListenerComponent TurnListenerComponent { get; set; }
-
-        private void OnTurnAction(ulong turnCount)
+        protected override void OnTurnAction(ulong turnCount)
         {
-            SetPosition(Position + MoveTileComponent.GetMove());
+            Position += MoveTileComponent.GetMove();
         }
 
-        protected virtual TileTurnListenerComponent CreateTurnListenerComponent() => new(this, OnTurnAction);
-
-        protected override MoveTileComponent CreateMoveTileComponent() => new SwipeToMoveTileComponent(this, new CollisionMoveValidator());
         protected override TransformTileComponent CreateTransformComponent() => new TweenTransformTileComponent(this);
-
-        protected override List<ITileComponent> GetDefaultComponents() => new(base.GetDefaultComponents())
-        {
-            (TurnListenerComponent = CreateTurnListenerComponent()),
-        };
+        protected override MoveTileComponent CreateMoveTileComponent() => new SwipeToMoveTileComponent(this, new CollisionMoveValidator());
     }
 }

@@ -123,9 +123,6 @@ namespace Ribbons.RoguelikeGame
         /// </summary>
         private static void RelayPositionChange(ITile tile, Vector2Int pos)
         {
-            foreach (ITileComponent component in tile)
-                component.OnTilePositionMove(pos);
-
             tile.OnPositionMove(pos);
         }
 
