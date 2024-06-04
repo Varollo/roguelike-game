@@ -14,11 +14,13 @@ namespace Ribbons.RoguelikeGame
 
         protected override void OnTurnAction(ulong turnCount)
         {
-            if (_playerTile == null)
-                _followComponent.SetTarget(_playerTile = Object.FindAnyObjectByType<PlayerTileView>().Tile as BaseTile);
+            if (PlayerTile.Instance == null)
+                return;
 
-            if (_playerTile != null)
-                Position += MoveTileComponent.GetMove();
+            if (_playerTile == null)
+                _followComponent.SetTarget(_playerTile = PlayerTile.Instance);
+
+            Position += MoveTileComponent.GetMove();
         }
 
         protected override MoveTileComponent CreateMoveTileComponent() => new FollowerMoveTileComponent(this, new CollisionMoveValidator());
