@@ -1186,9 +1186,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1274959307}
   - component: {fileID: 1274959310}
-  - component: {fileID: 1274959309}
   - component: {fileID: 1274959308}
   - component: {fileID: 1274959311}
+  - component: {fileID: 1274959312}
   m_Layer: 0
   m_Name: TestEnemy (1)
   m_TagString: Untagged
@@ -1219,26 +1219,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1274959306}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b394523095d8d804182c6b931ae02e22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 349282279}
   moveDistance: 1
---- !u!114 &1274959309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1274959306}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b6b95f0b3eecc14fb61334c03628504, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  behaviourTypeName: MoveRandDirBehaviour
 --- !u!61 &1274959310
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1297,6 +1284,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnSize: 100
+--- !u!114 &1274959312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274959306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca9a116464274047a2a212bc5e7ad3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetView: {fileID: 349282281}
+  _allowDiagonals: 0
 --- !u!1 &1305065691
 GameObject:
   m_ObjectHideFlags: 0

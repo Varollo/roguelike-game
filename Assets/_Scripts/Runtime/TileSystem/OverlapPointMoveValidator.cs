@@ -20,9 +20,14 @@ namespace Ribbons.RoguelikeGame.TileSystem
 
         public bool CanMove(Vector2Int from, Vector2Int to)
         {
+            return TileManager.TryMove(to) && !OverlapPoint(to);
+        }
+
+        private bool OverlapPoint(Vector2Int to)
+        {
             return _useLayerMask 
-                ? !Physics2D.OverlapPoint(to, _layerMask) 
-                : !Physics2D.OverlapPoint(to);
+                ? Physics2D.OverlapPoint(to, _layerMask) 
+                : Physics2D.OverlapPoint(to);
         }
     }
 }

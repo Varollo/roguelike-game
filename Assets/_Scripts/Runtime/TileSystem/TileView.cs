@@ -2,8 +2,14 @@
 
 namespace Ribbons.RoguelikeGame.TileSystem
 {
-    public abstract class TileView<TTile> : MonoBehaviour where TTile : ITile
+    public abstract class TileView : MonoBehaviour 
     {
+        public abstract ITile Tile { get; }
+    }
+    public abstract class TileView<TTile> : TileView where TTile : ITile
+    {
+        public override ITile Tile => GetTile();
+
         private void Start()
         {
             OnTileInit();

@@ -16,14 +16,14 @@ namespace Ribbons.RoguelikeGame.TileSystem
         protected Transform Transform => _transform;
         protected bool Enabled { get; private set; }
 
-        protected Vector2Int Position => Transform.position.ToVec2Int();
+        public Vector2Int Position => Transform.position.ToVec2Int();
 
         private void OnCameraMove(Camera camera, Vector3 position)
         {
-            OnCameraDeltaChanged(camera);
+            TriggerOffScreenCheck(camera);
         }
 
-        private void OnCameraDeltaChanged(Camera camera)
+        protected void TriggerOffScreenCheck(Camera camera)
         {
             bool onScreen = Transform.OnScreen2D(camera);
             bool stateChanged = onScreen != Enabled;
@@ -42,11 +42,8 @@ namespace Ribbons.RoguelikeGame.TileSystem
 
         public void Move(Vector2Int pos)
         {
-            if (TileManager.TryMove(pos))
-            {
-                OnMove(pos);
-                OnCameraDeltaChanged(CameraManager.Instance.GetActiveCamera());
-            }
+            OnMove(pos);
+            TriggerOffScreenCheck(CameraManager.Instance.GetActiveCamera());
         }
 
         public void OnInit()
