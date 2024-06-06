@@ -346,7 +346,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 349282279}
-  - component: {fileID: 349282280}
+  - component: {fileID: 349282281}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -370,7 +370,7 @@ Transform:
   - {fileID: 80715613}
   m_Father: {fileID: 2111288513}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &349282280
+--- !u!114 &349282281
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 349282278}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fd91241d1c6028479793c2cab2c288e, type: 3}
+  m_Script: {fileID: 11500000, guid: 4c8d2e893456c664896b35152f9087e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &519420028
@@ -653,7 +653,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  cam: {fileID: 0}
   moveDistance: 1
 --- !u!114 &553357328
 MonoBehaviour:
@@ -1226,7 +1225,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 349282279}
-  cam: {fileID: 519420031}
   moveDistance: 1
 --- !u!114 &1274959309
 MonoBehaviour:
@@ -1293,7 +1291,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1274959306}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2cf9fc1568d9614f897b945d8b0f437, type: 3}
   m_Name: 
@@ -1523,7 +1521,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  cam: {fileID: 0}
   moveDistance: 1
 --- !u!114 &1704912260
 MonoBehaviour:

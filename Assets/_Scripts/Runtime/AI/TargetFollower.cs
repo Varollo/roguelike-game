@@ -1,5 +1,5 @@
 using DG.Tweening;
-using System;
+using Ribbons.RoguelikeGame.Misc;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,36 +11,43 @@ namespace Ribbons.RoguelikeGame
         private readonly static List<Vector2> _pendingMoves = new();
 
         [SerializeField] private Transform target;
-        [SerializeField] private Camera cam;
         [SerializeField][Min(0.01f)] private float moveDistance = 1f;
 
-        private void Awake() => TurnManager.AddTurnListener(this);
-        private void OnDestroy() => TurnManager.RemoveTurnListener(this);
+        private void Awake()
+        {
+            CameraManager.Instance.OnCameraMove += HideWhenOffScreen;
+            TurnManager.AddTurnListener(this);
+        }
+
+        private void OnDestroy()
+        {
+            CameraManager.Instance.OnCameraMove -= HideWhenOffScreen;
+            TurnManager.RemoveTurnListener(this);
+        }
 
         private void Start()
         {
-            DisableWhenOffScreen();
+            CheckStartOffscreen();
+        }
+
+        private void CheckStartOffscreen()
+        {
+            Camera cam = CameraManager.Instance.GetActiveCamera();
+            HideWhenOffScreen(cam, cam.transform.position);
+        }
+
+        private void HideWhenOffScreen(Camera camera, Vector3 position)
+        {
+            gameObject.SetActive(transform.OnScreen2D(camera, Vector2.one * 2));
         }
 
         public void OnTurnAction(ulong turnCount)
         {
-            if (DisableWhenOffScreen())
+            if (!isActiveAndEnabled)
                 return;
 
             if (turnCount % 2 == 0)
                 Move();
-        }
-
-        private bool DisableWhenOffScreen()
-        {
-            if (transform.OnScreen2D(cam, Vector2.one * 2))
-            {
-                gameObject.SetActive(true);
-                return false;
-            }
-
-            gameObject.SetActive(false);
-            return true;
         }
 
         private void Move()
