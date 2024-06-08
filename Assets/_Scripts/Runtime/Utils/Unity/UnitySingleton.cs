@@ -46,7 +46,7 @@ namespace Ribbons.RoguelikeGame
 
         private static TSelf CreateInstance()
         {
-            TSelf instance = new GameObject(nameof(TSelf)).AddComponent<TSelf>();
+            TSelf instance = new GameObject(typeof(TSelf).Name).AddComponent<TSelf>();
             DontDestroyInstance(instance);
             return instance;
         }

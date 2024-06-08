@@ -57,22 +57,33 @@ namespace Ribbons.RoguelikeGame
         /// <summary>
         /// Is <paramref name="point"/> being rendered by this <see cref="Camera"/>?
         /// </summary>
-        public static bool IsPointOnScreen2D(this Camera c, Vector2 point) => IsPointOnScreen2D(c, (Vector3)point);
+        public static bool IsPointOnScreen2D(this Camera c, Vector2 point, Vector2 padding = default) => IsPointOnScreen2D(c, (Vector3)point, padding);
 
         /// <summary>
         /// Is <paramref name="point"/> being rendered by this <see cref="Camera"/>?
         /// </summary>
-        public static bool IsPointOnScreen2D(this Camera c, Vector2Int point) => IsPointOnScreen2D(c, (Vector2)point);
+        public static bool IsPointOnScreen2D(this Camera c, Vector2Int point, Vector2 padding = default) => IsPointOnScreen2D(c, (Vector2)point, padding);
 
         /// <summary>
         /// Is <paramref name="point"/> being rendered by this <see cref="Camera"/>?
         /// </summary>
-        public static bool IsPointOnScreen2D(this Camera c, Vector3 point) => UnitRect2D(c).Contains(point);
-
+        /// 
+        public static bool IsPointOnScreen2D(this Camera c, Vector3Int point, Vector2 padding = default) => IsPointOnScreen2D(c, (Vector3)point, padding);
         /// <summary>
         /// Is <paramref name="point"/> being rendered by this <see cref="Camera"/>?
         /// </summary>
-        public static bool IsPointOnScreen2D(this Camera c, Vector3Int point) => IsPointOnScreen2D(c, (Vector3)point);
+        public static bool IsPointOnScreen2D(this Camera c, Vector3 point, Vector2 padding = default)
+        {
+            Rect camRect = UnitRect2D(c);
+            
+            if (padding != Vector2.zero)
+            {
+                camRect.min -= padding;
+                camRect.max += padding;
+            }
+
+            return camRect.Contains(point);
+        }
         #endregion
 
         #region On Screen 2D
@@ -80,12 +91,12 @@ namespace Ribbons.RoguelikeGame
         /// Is this object being rendered by given <see cref="Camera"/> <paramref name="cam"/>?
         /// </summary>
         /// <param name="cam">Specific <see cref="Camera"/></param>
-        public static bool OnScreen2D(this Transform t, Camera cam) => IsPointOnScreen2D(cam, t.position);
+        public static bool OnScreen2D(this Transform t, Camera cam, Vector2 padding = default) => IsPointOnScreen2D(cam, t.position, padding);
 
         /// <summary>
         /// Is this object being rendered by <see cref="Camera.main"/>?
         /// </summary>
-        public static bool OnScreen2D(this Transform t) => OnScreen2D(t, Camera.main); 
+        public static bool OnScreen2D(this Transform t, Vector2 padding = default) => OnScreen2D(t, Camera.main, padding); 
         #endregion
         #endregion
     }

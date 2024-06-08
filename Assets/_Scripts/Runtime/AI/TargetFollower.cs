@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Ribbons.RoguelikeGame.Misc;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,14 +13,45 @@ namespace Ribbons.RoguelikeGame
         [SerializeField] private Transform target;
         [SerializeField][Min(0.01f)] private float moveDistance = 1f;
 
-        private void OnEnable() => TurnManager.AddTurnListener(this);
-        private void OnDisable() => TurnManager.RemoveTurnListener(this);
+        private void Awake()
+        {
+            CameraManager.Instance.OnCameraMove += HideWhenOffScreen;
+            TurnManager.AddTurnListener(this);
+        }
+
+        private void OnDestroy()
+        {
+            CameraManager.Instance.OnCameraMove -= HideWhenOffScreen;
+            TurnManager.RemoveTurnListener(this);
+        }
+
+        private void Start()
+        {
+            CheckStartOffscreen();
+        }
+
+        private void CheckStartOffscreen()
+        {
+            Camera cam = CameraManager.Instance.GetActiveCamera();
+            HideWhenOffScreen(cam, cam.transform.position);
+        }
+
+        private void HideWhenOffScreen(Camera camera, Vector3 position)
+        {
+            gameObject.SetActive(transform.OnScreen2D(camera, Vector2.one * 2));
+        }
 
         public void OnTurnAction(ulong turnCount)
         {
-            if (turnCount % 2 == 0)
+            if (!isActiveAndEnabled)
                 return;
 
+            if (turnCount % 2 == 0)
+                Move();
+        }
+
+        private void Move()
+        {
             Vector2 currentPos = transform.position;
             Vector2 targetPos = target.position;
 
