@@ -11,6 +11,12 @@ namespace Ribbons.RoguelikeGame.TileSystem
         private void OnEnable() => TurnManager.AddTurnListener(this);
         private void OnDisable() => TurnManager.RemoveTurnListener(this);
 
+        public static bool TryMove(Vector2Int from, Vector2Int to)
+        {
+            Instance._moveRegistry.SetFree(from.x, from.y);
+            return TryMove(to);
+        }
+
         public static bool TryMove(Vector2Int move) => Instance._moveRegistry.TryMove(move.x, move.y);
         public static bool CanMove(Vector2Int move) => Instance._moveRegistry.IsFree(move.x, move.y);
 
