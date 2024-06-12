@@ -15,13 +15,13 @@ namespace Ribbons.RoguelikeGame
 
         private void Awake()
         {
-            CameraManager.Instance.OnCameraMove += HideWhenOffScreen;
+            ManagerMaster.GetManager<CameraManager>().OnCameraMove += HideWhenOffScreen;
             TurnManager.AddTurnListener(this);
         }
 
         private void OnDestroy()
         {
-            CameraManager.Instance.OnCameraMove -= HideWhenOffScreen;
+            ManagerMaster.GetManager<CameraManager>().OnCameraMove -= HideWhenOffScreen;
             TurnManager.RemoveTurnListener(this);
         }
 
@@ -32,7 +32,7 @@ namespace Ribbons.RoguelikeGame
 
         private void CheckStartOffscreen()
         {
-            Camera cam = CameraManager.Instance.GetActiveCamera();
+            Camera cam = ManagerMaster.GetManager<CameraManager>().GetActiveCamera();
             HideWhenOffScreen(cam, cam.transform.position);
         }
 

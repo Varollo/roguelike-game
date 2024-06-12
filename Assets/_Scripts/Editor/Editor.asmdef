@@ -1,6 +1,6 @@
 {
     "name": "Editor",
-    "rootNamespace": "",
+    "rootNamespace": "Ribbons.RoguelikeGame.EditorScripts",
     "references": [
         "GUID:55ce13caaeeb121498c6a394c721e23c"
     ],
