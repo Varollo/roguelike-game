@@ -23,7 +23,7 @@ namespace Ribbons.RoguelikeGame
         protected void CheckForDuplicate(bool destroyIfDupl = true)
         {
             if (_instance == null)
-                SetInstance(this);
+                SetAsInstance(this);
 
             else if (_instance != this && destroyIfDupl)
                 DestroyThis();            
@@ -38,16 +38,21 @@ namespace Ribbons.RoguelikeGame
                 Destroy(this);
         }
 
-        private void SetInstance(TSelf instance)
+        private void SetAsInstance(TSelf instance)
         {
             _instance = instance;
+            
+            OnCreateInstance();
             DontDestroyInstance(instance);
         }
 
         private static TSelf CreateInstance()
         {
             TSelf instance = new GameObject(typeof(TSelf).Name).AddComponent<TSelf>();
+            
+            instance.OnCreateInstance();
             DontDestroyInstance(instance);
+
             return instance;
         }
 
@@ -59,6 +64,8 @@ namespace Ribbons.RoguelikeGame
             instance.transform.parent = null;
             DontDestroyOnLoad(instance);
         }
+
+        protected virtual void OnCreateInstance() { }
 
         public static implicit operator TSelf(UnitySingleton<TSelf> a) => (TSelf)a;
     }
