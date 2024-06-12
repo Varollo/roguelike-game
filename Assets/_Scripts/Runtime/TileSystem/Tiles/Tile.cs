@@ -44,19 +44,19 @@ namespace Ribbons.RoguelikeGame.TileSystem
         public void Move(Vector2Int pos)
         {
             OnMove(Position, Position = pos);
-            TriggerOffScreenCheck(CameraManager.Instance.GetActiveCamera());
+            TriggerOffScreenCheck(ManagerMaster.GetManager<CameraManager>().GetActiveCamera());
         }
 
         public void OnInit()
         {
-            OnEnterScreen(CameraManager.Instance.GetActiveCamera()); // when initialized consider on screen
+            OnEnterScreen(ManagerMaster.GetManager<CameraManager>().GetActiveCamera()); // when initialized consider on screen
             Move(Transform.position.ToVec2Int()); // move into place
             OnTileInit();
         }
 
         public void OnKill()
         {
-            OnExitScreen(CameraManager.Instance.GetActiveCamera()); // when killed consider off screen
+            OnExitScreen(ManagerMaster.GetManager<CameraManager>().GetActiveCamera()); // when killed consider off screen
             OnTileKill();
         }
 
@@ -75,12 +75,12 @@ namespace Ribbons.RoguelikeGame.TileSystem
 
         protected virtual void OnTileInit() 
         {
-            CameraManager.Instance.OnCameraMove += OnCameraMove;
+            ManagerMaster.GetManager<CameraManager>().OnCameraMove += OnCameraMove;
         }
 
         protected virtual void OnTileKill() 
         {
-            CameraManager.Instance.OnCameraMove -= OnCameraMove;
+            ManagerMaster.GetManager<CameraManager>().OnCameraMove -= OnCameraMove;
         }
 
         protected virtual void OnEnterScreen(Camera camera) 

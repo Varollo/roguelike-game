@@ -1,42 +1,29 @@
-﻿using UnityEngine;
+﻿using Ribbons.RoguelikeGame.ColorPalette;
+using UnityEngine;
 
 namespace Ribbons.RoguelikeGame.Misc
 {
-    public class CameraManager : UnitySingleton<CameraManager>
+    public class CameraManager : IManager, IUpdateListener, IEnableListener
     {
         public delegate void CameraPositionDelegate(Camera camera, Vector3 position);
         public event CameraPositionDelegate OnCameraMove;
 
-        [SerializeField] private float cameraMoveThresshold = 1;
+        private readonly float _cameraMoveThresshold = 1;
 
         private Camera _activeCamera;
         private Vector3 _lastCameraPos;
 
-        protected override bool KeepOnLoadScene => false;
-
-        public Camera GetActiveCamera() => _activeCamera ? _activeCamera : (_activeCamera = Camera.main);
-
-        private void OnEnable()
+        public Camera GetActiveCamera()
         {
-            Camera mainCam = GetActiveCamera();
+            if (!_activeCamera)
+            {
+                _activeCamera = Camera.main;
 
-            if (mainCam)
-                _lastCameraPos = mainCam.transform.position;
-        }
+                if (_activeCamera)
+                    _activeCamera.backgroundColor = ManagerMaster.GetManager<PaletteManager>().GetColor(ColorID.Black);
+            }
 
-        private void Update()
-        {
-            Camera mainCam = GetActiveCamera();
-
-            if (!mainCam)
-                return;
-
-            Vector3 newCameraPos = mainCam.transform.position;
-
-            float moveDist = GetMoveDistance(_lastCameraPos, newCameraPos);
-
-            if (moveDist >= cameraMoveThresshold * cameraMoveThresshold)
-                HandleCameraMove(mainCam, newCameraPos);
+            return _activeCamera;
         }
 
         private float GetMoveDistance(Vector3 oldPos, Vector3 newPos)
@@ -49,5 +36,37 @@ namespace Ribbons.RoguelikeGame.Misc
             _lastCameraPos = camPos;
             OnCameraMove?.Invoke(camera, camPos);
         }
+
+        #region Messager Callbacks
+        public void OnInit()
+        {
+            OnEnable();
+        }
+
+        public void OnEnable()
+        {
+            Camera mainCam = GetActiveCamera();
+
+            if (mainCam)
+                _lastCameraPos = mainCam.transform.position;
+        }
+
+        public void OnUpdate()
+        {
+            Camera mainCam = GetActiveCamera();
+
+            if (!mainCam)
+                return;
+
+            Vector3 newCameraPos = mainCam.transform.position;
+
+            float moveDist = GetMoveDistance(_lastCameraPos, newCameraPos);
+
+            if (moveDist >= _cameraMoveThresshold * _cameraMoveThresshold)
+                HandleCameraMove(mainCam, newCameraPos);
+        }
+
+        public void OnDestroy() { } 
+        #endregion
     }
 }
