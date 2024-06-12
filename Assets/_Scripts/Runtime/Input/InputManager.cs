@@ -5,35 +5,26 @@ using UnityEngine;
 
 namespace Ribbons.RoguelikeGame
 {
-    public class InputManager : UnitySingleton<InputManager>
-    {
-        [Header("Swipe")]
-        [SerializeField] private bool swipeOnlyOnRelease = false;
-        [SerializeField] private float swipeThreshold = 20f;
+    public class InputManager : IManager, IUpdateListener
+    {        
+        private readonly bool _swipeOnlyOnRelease = false;
+        private readonly float _swipeThreshold = 20f;
 
         private Dictionary<Type, InputController> _controllers;
 
         private Dictionary<Type, InputController> Controllers => _controllers ??=
             MakeControllers().ToDictionary(ctrl => ctrl.GetType(), ctrl => ctrl);
 
-        protected override bool KeepOnLoadScene => false;
-
         public static TController GetController<TController>() where TController : InputController
         {
-            return Instance.Controllers[typeof(TController)] as TController;
+            return ManagerMaster.GetManager<InputManager>().Controllers[typeof(TController)] as TController;
         }
 
         private List<InputController> MakeControllers() => new()
         {
             new TouchInputController(),
-            new SwipeInputController(swipeThreshold, swipeOnlyOnRelease),
+            new SwipeInputController(_swipeThreshold, _swipeOnlyOnRelease),
         };
-
-        private void Update()
-        {
-            foreach (Touch touch in Input.touches)
-                HandleTouchPhase(touch);
-        }
 
         private void HandleTouchPhase(Touch touch)
         {
@@ -64,5 +55,16 @@ namespace Ribbons.RoguelikeGame
             foreach (InputController controller in Controllers.Values)
                 onController?.Invoke(controller);
         }
+
+        #region Messager Callbacks
+        public void OnUpdate()
+        {
+            foreach (Touch touch in Input.touches)
+                HandleTouchPhase(touch);
+        }
+
+        public void OnInit() { }
+        public void OnDestroy() { }
+        #endregion
     }
 }

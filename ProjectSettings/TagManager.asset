@@ -41,3 +41,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: FIlters
+    uniqueID: 3755378315
+    locked: 0

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ribbons.RoguelikeGame.ColorPalette;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -12,14 +13,14 @@ namespace Ribbons.RoguelikeGame
         [SerializeField] private bool usePositionAsSeed = false;
 
         private SpriteRenderer _spriteRenderer;
-        private WeightedList<Sprite> _spriteList;
+        private WeightedList<SpriteInfoData> _spriteList;
 
         private SpriteRenderer SpriteRenderer => _spriteRenderer == null 
                 ? _spriteRenderer = GetComponent<SpriteRenderer>() 
                 : _spriteRenderer;
 
-        private WeightedList<Sprite> SpriteList => _spriteList ??= new(
-            sprites.ToDictionary(s => s.Sprite, s => s.Weight));
+        private WeightedList<SpriteInfoData> SpriteList => _spriteList ??= new(
+            sprites.ToDictionary(s => new SpriteInfoData(s.Sprite, s.Color), s => s.Weight));
 
         private void Start()
         {
@@ -27,9 +28,15 @@ namespace Ribbons.RoguelikeGame
                 RandomizeSprite();
         }
 
-        public void RandomizeSprite() => SpriteRenderer.sprite = usePositionAsSeed
-                ? SpriteList.Get(RNGManager.FromSeed(GetSeedFromPosition(transform.position)))
-                : SpriteList.Get(RNGManager.Value);
+        public void RandomizeSprite()
+        {
+            SpriteInfoData spriteInfo = usePositionAsSeed
+                            ? SpriteList.Get(RNGManager.FromSeed(GetSeedFromPosition(transform.position)))
+                            : SpriteList.Get(RNGManager.Value);
+            
+            SpriteRenderer.sprite = spriteInfo.Sprite;
+            SpriteRenderer.color = ManagerMaster.GetManager<PaletteManager>().GetColor(spriteInfo.Color);
+        }
 
         private static string GetSeedFromPosition(Vector3 position)
         {
@@ -46,7 +53,20 @@ namespace Ribbons.RoguelikeGame
         private struct SpriteWeightData
         {
             public Sprite Sprite;
+            public ColorID Color;
             [Range(0.0f, 1.0f)] public float Weight;
+        }
+
+        private struct SpriteInfoData
+        {
+            public Sprite Sprite;
+            public ColorID Color;
+
+            public SpriteInfoData(Sprite sprite, ColorID color)
+            {
+                Sprite = sprite;
+                Color = color;
+            }
         }
     }
 }
