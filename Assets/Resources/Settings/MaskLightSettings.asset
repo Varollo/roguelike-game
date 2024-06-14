@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db92921639d680147bedc27dd2ff8bcd, type: 3}
+  m_Name: MaskLightSettings
+  m_EditorClassIdentifier: 
+  mipMap:
+  - {fileID: 2099067662, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: 2046967595, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: -1646502117, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: -1140515181, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: 655850135, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: -797440289, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: -1153121253, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: -59248622, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}
+  - {fileID: -1414430170, guid: bd11f9428c3804c45aae2a3619e4b34f, type: 3}

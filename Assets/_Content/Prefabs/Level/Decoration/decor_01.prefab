@@ -137,6 +137,6 @@ MonoBehaviour:
     Color: 5
     Weight: 0.3
   - Sprite: {fileID: -1649061814, guid: 887ea5c1bdbb8ac42b47cf954e3ed491, type: 3}
-    Color: 2
+    Color: 1
     Weight: 0.5
   usePositionAsSeed: 1

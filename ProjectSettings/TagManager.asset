@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Lighting
   - 
   - 
   - 
@@ -38,8 +38,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Lighting
+    uniqueID: 2068527859
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Shadow
+    uniqueID: 2143195743
     locked: 0
   - name: FIlters
     uniqueID: 3755378315
