@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Ribbons.RoguelikeGame
+namespace Ribbons
 {
     public static class UnityExtensions
     {
@@ -96,8 +96,22 @@ namespace Ribbons.RoguelikeGame
         /// <summary>
         /// Is this object being rendered by <see cref="Camera.main"/>?
         /// </summary>
-        public static bool OnScreen2D(this Transform t, Vector2 padding = default) => OnScreen2D(t, Camera.main, padding); 
+        public static bool OnScreen2D(this Transform t, Vector2 padding = default) => OnScreen2D(t, Camera.main, padding);
         #endregion
+        #endregion
+
+        #region MonoBehaviour / Components
+        public static TComponent GetOrAddComponent<TComponent>(this Component thisComp, bool includeChildren = false, bool includeInactive = true) where TComponent : Component
+        {
+            TComponent newComp = includeChildren 
+                ? thisComp.GetComponentInChildren<TComponent>(includeInactive) 
+                : thisComp.GetComponent<TComponent>();
+
+            if (!newComp)
+                newComp = thisComp.gameObject.AddComponent<TComponent>();
+            
+            return newComp;
+        }
         #endregion
     }
 }
