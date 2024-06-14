@@ -7,13 +7,20 @@ namespace Ribbons.RoguelikeGame
     public class PaletteColorPicker : MonoBehaviour
     {
         [SerializeField] private ColorID colorID;
+        [SerializeField] private bool keepAlpha = true;
 
         private SpriteRenderer _renderer;
 
         private void Start()
         {
             _renderer = GetComponent<SpriteRenderer>();
-            _renderer.color = ManagerMaster.GetManager<PaletteManager>().GetColor(colorID);
+            
+            var color = ManagerMaster.GetManager<PaletteManager>().GetColor(colorID);
+            
+            if (keepAlpha)
+                color.a = _renderer.color.a;
+
+            _renderer.color = color;
         }
     }
 }
